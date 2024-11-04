@@ -17,7 +17,7 @@ function cleanInput(rawText){
       .replace(/\bMHO/g, "MH0")
       .split(" ")
       .map(word => word.trim())
-      .filter(word => word !== '-' && word) // Filter out '-' and empty words
+      .filter(word => word !== '-' && word)
       .filter(Boolean);
 
     return cleanedTextArray;
@@ -49,7 +49,7 @@ function nameChecker(wordName) {
 function toTakeLastName(fullNameArray){
     let lastWord = fullNameArray[2];
     if (lastWord && dropVariations.includes(lastWord.toLowerCase()))
-        return false; // Exclude last word if in drop list
+        return false; 
     return true;
 }
 

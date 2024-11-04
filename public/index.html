@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driving License Text Extractor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 100px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        input[type="file"] {
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #output {
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Driving License Text Extractor</h1>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <label for="image">Upload Image:</label>
+            <input type="file" id="image" name="image" accept="image/*" required>
+            <button type="submit">Extract Text</button>
+        </form>
+
+        <div id="output"></div>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            const formData = new FormData();
+            const fileInput = document.getElementById('image');
+            
+            if (!fileInput.files.length) {
+                alert("Please select an image.");
+                return;
+            }
+
+            formData.append('image', fileInput.files[0]);
+
+            try {
+                const response = await fetch('/api/drivingLicense/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to upload image.');
+                }
+
+                const result = await response.json();
+                displayOutput(result);
+
+            } catch (error) {
+                console.error(error);
+                displayOutput({ error: "An error occurred while processing the image." });
+            }
+        });
+
+        function displayOutput(result) {
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = "";
+
+            if (result.error) {
+                outputDiv.innerHTML = `<p style="color:red;">${result.error}</p>`;
+            } else {
+                outputDiv.innerHTML = `
+                    <h3>Extracted Details:</h3>
+                    <p><strong>Name:</strong> ${result.name}</p>
+                    <p><strong>Driving License No:</strong> ${result.drivingLicenseNo}</p>
+                    <p><strong>Expiration Date:</strong> ${result.expirationDate}</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
