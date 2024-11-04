@@ -19,7 +19,6 @@ node app.js
 - send a `POST` request to `localhost:3000/api/drivingLicense/upload`
 - use POSTMAN client to upload the image through `form-data` in `body`
 - upload only 1 image through variable named `image`
-- use sample images taken from web provided in [`sampleImages`](./sampleImages) folder
 
 images for the project
 ![output/out1](https://github.com/sandy1in/docuville/blob/main/output/out1.jpg)
